@@ -1,7 +1,6 @@
 #include "wizzard.h"
 
 #include <stdio.h>
-#include <malloc.h>
 #include <assert.h>
 
 #pragma region private
@@ -11,7 +10,7 @@ typedef struct __wizzard_private_section {
 } _wizzard_private_section;
 
 static void ___alloc_wizzard_private_section(struct __wizzard_private_section **private_section) {
-    *private_section = (struct __wizzard_private_section*)alloca(sizeof(struct __wizzard_private_section));
+    *private_section = (struct __wizzard_private_section*)malloc(sizeof(struct __wizzard_private_section));
     assert(*private_section != NULL);
 }
 
@@ -23,11 +22,6 @@ static void ___wizzard_private_section_constructor(_wizzard_private_section* sel
     self->mana = mana;
 }
 #pragma endregion private
-
-// static void ___init_wizzard(wizzard *self, float health, float damage, float mana) {
-//     self->_wizzard_private_section->base.construct(&self->_wizzard_private_section->base, health, damage);
-//     self->_wizzard_private_section->mana = mana;
-// }
 
 static void _wizzard_default_constructor(wizzard *self) {
     ___alloc_wizzard_private_section(&self->_private_section);
@@ -41,6 +35,7 @@ static void _wizzard_constructor(wizzard *self, float health, float damage, floa
 
 static void _wizzard_destructor(const wizzard *self) {
     self->_private_section->base.destruct(&self->_private_section->base);
+    free(self->_private_section);
 }
 
 static void _wizzard_atack(wizzard *self, unit *enemy) {
@@ -49,7 +44,6 @@ static void _wizzard_atack(wizzard *self, unit *enemy) {
     
     if (self->_private_section->mana > 0.0f) {
         enemy->take_damage(enemy, 10.0f);
-        // enemy->take_damage() -= 10.0f;
         self->_private_section->mana -= 20.0f;
     }
 }

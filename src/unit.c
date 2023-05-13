@@ -2,7 +2,6 @@
 
 #include <stdio.h>
 #include <stdlib.h>
-#include <malloc.h>
 #include <assert.h>
 
 #pragma region private
@@ -12,7 +11,7 @@ typedef struct __unit_private_section {
 } _unit_private_section;
 
 static void ___alloc_unit_private_section(struct __unit_private_section** private_section) {
-    *private_section = (struct __unit_private_section*)alloca(sizeof(struct __unit_private_section));
+    *private_section = (struct __unit_private_section*)malloc(sizeof(struct __unit_private_section));
     assert(*private_section != NULL);
 }
 
@@ -35,16 +34,18 @@ static void _unit_constructor(unit *self, float health, float damage) {
 }
 
 static void _unit_destructor(const unit *self) {
-    
+    free(self->_private_section);
 }
 
 static void _unit_atack(unit *self, unit *enemy) {
     printf_s("Hello from unit attack method\n");
-    enemy->_private_section->health -= self->_private_section->damage;
+    enemy->take_damage(enemy, self->_private_section->damage);
 }
 
 static void _unit_take_damage(unit *self, float damage) {
-    self->_private_section->health -= damage;
+    if (damage > 0.0f) {
+        self->_private_section->health -= damage;
+    }
 }
 
 static bool _unit_is_alive(const unit *self) {
