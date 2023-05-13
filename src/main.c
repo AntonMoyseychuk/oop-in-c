@@ -4,8 +4,11 @@
 
 
 int main() {
-    CREATE_UNIT_INSTANCE(player);
-    CREATE_WIZZARD_INSTANCE(enemy);
+    unit player;
+    CREATE_UNIT_INSTANCE(&player);
+
+    wizzard enemy;
+    CREATE_WIZZARD_INSTANCE(&enemy);
 
     player.construct(&player, 100.0f, 5.0f);
     enemy.construct(&enemy, 70.0f, 15.0f, 100.0f);

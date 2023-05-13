@@ -1,0 +1,6 @@
+{
+    "files.associations": {
+        "wizzard.h": "c",
+        "malloc.h": "c"
+    }
+}

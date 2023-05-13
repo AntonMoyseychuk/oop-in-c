@@ -1,13 +1,10 @@
 #pragma once
 #include "unit.h"
 
-typedef struct __wizzard_private_block {
-    unit base;
-    float mana;
-} _wizzard_private_block;
+struct __wizzard_private_section;
 
 typedef struct _wizzard {
-    _wizzard_private_block _private_section;
+    struct __wizzard_private_section* _private_section;
     
 
     void (*default_construct)(struct _wizzard* self);
@@ -22,4 +19,4 @@ typedef struct _wizzard {
 
 void __init_wizzard_methods(wizzard *self);
 
-#define CREATE_WIZZARD_INSTANCE(name) wizzard name; __init_wizzard_methods(&name)
+#define CREATE_WIZZARD_INSTANCE(wizzard_ptr) __init_wizzard_methods(wizzard_ptr)
